@@ -1,14 +1,129 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Süper Lig Kart Oyunu</title>
-  <link rel="manifest" href="manifest.json">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>🏆 Süper Lig Kart Oyunu</title>
+  <link rel="manifest" href="manifest.json" />
+  <style>
+    :root{--bg:#0b0c0f;--card:#111317;--muted:#9aa3af;--text:#e5e7eb;--acc:#10b981}
+    *{box-sizing:border-box} body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Arial,sans-serif;background:linear-gradient(180deg,#0b0c0f,#12141a);color:var(--text)}
+    .wrap{max-width:900px;margin:0 auto;padding:24px}
+    h1{margin:0 0 12px;font-size:24px}
+    .row{display:flex;gap:10px;flex-wrap:wrap}
+    .card{background:var(--card);border:1px solid #1f2430;border-radius:14px;padding:16px;margin-bottom:12px}
+    button,input,select{padding:12px;border-radius:12px;border:1px solid #2a2f3a;background:#0e1116;color:var(--text)}
+    button.primary{background:var(--acc);border-color:#0ea371;color:#042016;font-weight:700;cursor:pointer}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .kutu{border:1px solid #202636;border-radius:12px;padding:14px;text-align:center;background:#0e1116}
+    .big{font-size:22px;font-weight:800}
+    .muted{color:var(--muted);font-size:12px}
+    .pill{display:inline-block;padding:2px 8px;border-radius:999px;background:#161a22;color:#cbd5e1;margin:4px;font-size:12px;border:1px solid #23293a}
+    table{width:100%;border-collapse:collapse}
+    th,td{border-bottom:1px solid #23293a;padding:8px;text-align:left;font-size:13px}
+    @media (max-width:640px){ .grid{grid-template-columns:1fr} }
+  </style>
 </head>
 <body>
-  <h1>🏆 Süper Lig Kart Oyunu</h1>
-  <p>Arkadaşlarınla oynayabileceğin mini kart oyunu.</p>
-  <button onclick="alert('Kart çekildi!')">Kart Çek</button>
+  <div class="wrap">
+    <h1>🏆 Süper Lig Kart Oyunu</h1>
+    <div class="muted">Veri kaynağı: <code>teams.json</code> (repo'da durur, sen istediğinde güncellersin)</div>
+
+    <div class="card grid">
+      <div class="kutu">
+        <div class="muted">Takım Kartı</div>
+        <div id="teamBox" class="big">—</div>
+        <div id="teamRating" class="muted">rating: —</div>
+        <button class="primary" style="margin-top:8px" id="drawTeam">Takım Kartı Çek</button>
+      </div>
+      <div class="kutu">
+        <div class="muted">Futbolcu Kartı</div>
+        <div id="playerBox" class="big">—</div>
+        <div id="playerMeta" class="muted">pozisyon/rating: —</div>
+        <button class="primary" style="margin-top:8px" id="drawPlayer">Futbolcu Kartı Çek</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <b>İki Oyunculu Hızlı Karşılaştırma</b>
+      <div class="grid" style="margin-top:8px">
+        <div>
+          <label class="muted">A (futbolcu adı)</label>
+          <input id="aName" placeholder="örn. Mauro Icardi" />
+        </div>
+        <div>
+          <label class="muted">B (futbolcu adı)</label>
+          <input id="bName" placeholder="örn. Edin Džeko" />
+        </div>
+      </div>
+      <div class="row" style="margin-top:10px">
+        <button class="primary" id="duel">Karşılaştır (rating)</button>
+        <div id="duelResult" class="muted"></div>
+      </div>
+      <div class="muted" style="margin-top:6px">İpucu: Oyuncu adlarını `teams.json` içinden seçersen rating'e göre kazananı gösterir.</div>
+    </div>
+
+    <div class="card">
+      <b>Yüklü Takımlar</b>
+      <div id="teamsList" style="margin-top:6px"></div>
+    </div>
+  </div>
+
+  <script>
+    if('serviceWorker' in navigator){ navigator.serviceWorker.register('sw.js').catch(()=>{}); }
+
+    let DB = [];
+    async function load() {
+      const res = await fetch('teams.json', {cache:'no-store'});
+      DB = await res.json();
+      renderTeamList();
+    }
+
+    function renderTeamList(){
+      const root = document.getElementById('teamsList');
+      root.innerHTML = DB.map(t => 
+        `<div class="pill">${t.team} (${t.rating}) — ` + t.players.map(p=>p.name).join(', ') + `</div>`
+      ).join('');
+    }
+
+    function rnd(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+
+    document.getElementById('drawTeam').onclick = () => {
+      const t = rnd(DB);
+      document.getElementById('teamBox').textContent = t.team;
+      document.getElementById('teamRating').textContent = 'rating: ' + t.rating;
+    };
+
+    document.getElementById('drawPlayer').onclick = () => {
+      const t = rnd(DB); const p = rnd(t.players);
+      document.getElementById('playerBox').textContent = p.name + ' – ' + t.team;
+      document.getElementById('playerMeta').textContent = `pozisyon: ${p.pos} | rating: ${p.rating}`;
+    };
+
+    document.getElementById('duel').onclick = () => {
+      const a = document.getElementById('aName').value.trim().toLowerCase();
+      const b = document.getElementById('bName').value.trim().toLowerCase();
+      if(!a || !b) return alert('İki isim de gerekli.');
+      function find(name){
+        for(const t of DB){
+          const p = t.players.find(pp => pp.name.toLowerCase() === name);
+          if(p) return {team:t.team, ...p};
+        }
+        return null;
+      }
+      const A = find(a), B = find(b);
+      if(!A || !B){
+        document.getElementById('duelResult').textContent = 'İsim(ler) bulunamadı. teams.json dosyasına ekleyebilirsin.';
+        return;
+      }
+      let msg = `${A.name} (${A.rating}) vs ${B.name} (${B.rating}) → `;
+      if(A.rating > B.rating) msg += 'Kazanan: ' + A.name;
+      else if(B.rating > A.rating) msg += 'Kazanan: ' + B.name;
+      else msg += 'Berabere';
+      document.getElementById('duelResult').textContent = msg;
+    };
+
+    load();
+  </script>
 </body>
 </html>

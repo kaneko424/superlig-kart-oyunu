@@ -1,9 +1,9 @@
 {
-  "name": "Süper Lig Kart Oyunu",
+  "name": "Süper Lig Kart Oyunu – Canlı JSON",
   "short_name": "Kart Oyunu",
-  "start_url": "index.html",
+  "start_url": ".",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#000000",
+  "background_color": "#0b0c0f",
+  "theme_color": "#111111",
   "icons": []
 }

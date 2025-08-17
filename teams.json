@@ -1,0 +1,107 @@
+[
+  {
+    "team": "Galatasaray",
+    "rating": 92,
+    "players": [
+      {
+        "name": "Mauro Icardi",
+        "rating": 91,
+        "pos": "FW"
+      },
+      {
+        "name": "Dries Mertens",
+        "rating": 86,
+        "pos": "AM"
+      },
+      {
+        "name": "Fernando Muslera",
+        "rating": 84,
+        "pos": "GK"
+      }
+    ]
+  },
+  {
+    "team": "Fenerbahçe",
+    "rating": 91,
+    "players": [
+      {
+        "name": "Edin Džeko",
+        "rating": 87,
+        "pos": "FW"
+      },
+      {
+        "name": "Dušan Tadić",
+        "rating": 86,
+        "pos": "AM"
+      },
+      {
+        "name": "İrfan Can Kahveci",
+        "rating": 82,
+        "pos": "AM"
+      }
+    ]
+  },
+  {
+    "team": "Beşiktaş",
+    "rating": 88,
+    "players": [
+      {
+        "name": "Cenk Tosun",
+        "rating": 82,
+        "pos": "FW"
+      },
+      {
+        "name": "Rachid Ghezzal",
+        "rating": 83,
+        "pos": "RW"
+      },
+      {
+        "name": "Vincent Aboubakar",
+        "rating": 84,
+        "pos": "FW"
+      }
+    ]
+  },
+  {
+    "team": "Trabzonspor",
+    "rating": 87,
+    "players": [
+      {
+        "name": "Edin Višća",
+        "rating": 84,
+        "pos": "RW"
+      },
+      {
+        "name": "Umut Bozok",
+        "rating": 78,
+        "pos": "FW"
+      },
+      {
+        "name": "Uğurcan Çakır",
+        "rating": 85,
+        "pos": "GK"
+      }
+    ]
+  },
+  {
+    "team": "Başakşehir",
+    "rating": 82,
+    "players": [
+      {
+        "name": "Danijel Aleksić",
+        "rating": 79,
+        "pos": "AM"
+      },
+      {
+        "name": "Mahmut Tekdemir",
+        "rating": 78,
+        "pos": "CM"
+      },
+      {
+        "name": "Stefano Okaka",
+        "rating": 80,
+        "pos": "FW"
+      }
+    ]
+  }
+]
